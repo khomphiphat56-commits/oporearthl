@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Anniversary 💜</title>
+
+<style>
+*{box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,#e7dbff,#f4edff,#d9c9ff);
+  overflow:hidden;
+}
+
+/* พื้นหลังลอย */
+.floating{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+
+/* การ์ดกลาง */
+.card{
+  position:relative;
+  z-index:10;
+  margin:7vh auto;
+  width:90%;
+  max-width:420px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(12px);
+  border-radius:28px;
+  padding:30px 22px;
+  text-align:center;
+  box-shadow:0 25px 45px rgba(150,100,200,.25);
+  animation:fadeUp 1s ease;
+}
+
+.main-img{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  object-fit:cover;
+  border:5px solid #e0c6ff;
+  box-shadow:0 12px 30px rgba(150,100,200,.4);
+}
+
+h1{
+  margin:18px 0 8px;
+  color:#6a3fb3;
+}
+p{
+  margin:0;
+  color:#7a6a9a;
+  font-size:15px;
+}
+
+/* ปุ่ม */
+.btn{
+  margin-top:22px;
+  padding:13px 30px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(135deg,#b88cff,#8f6bff);
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(150,100,200,.45);
+}
+
+/* รูปลอย */
+.float-img{
+  position:absolute;
+  bottom:-80px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  object-fit:cover;
+  opacity:.55;
+  animation:rise linear forwards;
+}
+
+/* หัวใจ */
+.heart{
+  position:absolute;
+  bottom:-40px;
+  opacity:.7;
+  animation:rise linear forwards;
+}
+
+@keyframes rise{
+  from{transform:translateY(0);opacity:0}
+  10%{opacity:1}
+  to{transform:translateY(-120vh);opacity:0}
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="floating" id="floating"></div>
+
+<div class="card">
+  <img src="main.jpg" class="main-img">
+  <h1>Happy Anniversary 💜</h1>
+  <p>ขอบคุณที่อยู่ด้วยกันเสมอ</p>
+
+  <!-- ปุ่มปลดล็อกเสียง -->
+  <button id="musicBtn" class="btn" onclick="unlockAudio()">
+    💜 แตะเพื่อเปิดเพลง
+  </button>
+</div>
+
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const floating = document.getElementById("floating");
+const imgs = ["pic1.jpg","pic2.jpg"];
+const hearts = ["💜","💖","💗","💞","🤍","💙","🩷","💘"];
+const music = document.getElementById("music");
+const btn = document.getElementById("musicBtn");
+let unlocked = false;
+
+/* ปลดล็อกเสียง (iOS ผ่านแน่นอน) */
+function unlockAudio(){
+  music.play().then(()=>{
+    unlocked = true;
+    btn.innerText = "🎧 เปิด / ปิด เพลง";
+    btn.onclick = toggleMusic;
+  }).catch(()=>{
+    alert("กรุณาแตะหน้าจออีกครั้ง");
+  });
+}
+
+function toggleMusic(){
+  if(music.paused){
+    music.play();
+  }else{
+    music.pause();
+  }
+}
+
+/* สร้างของลอย */
+function spawn(){
+  const isImage = Math.random() > 0.45;
+
+  if(isImage){
+    const img = document.createElement("img");
+    img.src = imgs[Math.floor(Math.random()*imgs.length)];
+    img.className = "float-img";
+    img.style.left = Math.random()*100 + "vw";
+    img.style.animationDuration = (8 + Math.random()*6) + "s";
+    floating.appendChild(img);
+    setTimeout(()=>img.remove(),15000);
+  }else{
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    h.style.left = Math.random()*100 + "vw";
+    h.style.fontSize = (16 + Math.random()*16) + "px";
+    h.style.animationDuration = (6 + Math.random()*6) + "s";
+    floating.appendChild(h);
+    setTimeout(()=>h.remove(),15000);
+  }
+}
+
+/* ปล่อยของรัวๆ */
+setInterval(spawn, 450);
+</script>
+
+</body>
+</html>
